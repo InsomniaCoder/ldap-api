@@ -19,6 +19,11 @@ export USER_DN_FORMAT="uid=%s,ou=personal,dc=your,dc=domain,dc=com"
 - and run `direnv allow .`
 - `go run main.go`
 
+## Docker
+
+- run `docker build . -t ldap-api:latest`
+- run `docker run -p 8080:8080 -d -e LDAP_URL="<>" -e ADMIN_DN="<>" -e ADMIN_PASSWD="<>" -e USER_DN_FORMAT="<>" ldap-api:latest`
+
 
 ## API usage
 
