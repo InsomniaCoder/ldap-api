@@ -13,6 +13,7 @@ It is created using `go-ldap` package and wrapped in `gin-gonic` for providing A
 export LDAP_URL="ldap://<your-ldap-domain>:<port>"
 export ADMIN_DN="cn=admin,dc=your,dc=domain,dc=com"
 export ADMIN_PASSWD="password"
+//%s is used for templating your id into
 export USER_DN_FORMAT="uid=%s,ou=personal,dc=your,dc=domain,dc=com"
 ```
 - and run `direnv allow .`
