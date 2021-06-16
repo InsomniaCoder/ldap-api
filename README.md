@@ -6,19 +6,26 @@ It is created using `go-ldap` package and wrapped in `gin-gonic` for providing A
 
 ## Local
 
-```
-go mod init github.com/insomniacoder/ldap-api
 
-//set up environment varialbe in .envrc
-// LDAP_URL, ADMIN_DN, ADMIN_PASSWD, USER_DN_FORMAT
-// and run direnv allow .
-go run main.go
+- `go mod init github.com/insomniacoder/ldap-api`
+- set up environment varialbe in .envrc
 ```
+export LDAP_URL="ldap://<your-ldap-domain>:<port>"
+export ADMIN_DN="cn=admin,dc=your,dc=domain,dc=com"
+export ADMIN_PASSWD="password"
+export USER_DN_FORMAT="uid=%s,ou=personal,dc=your,dc=domain,dc=com"
+```
+- and run `direnv allow .`
+- `go run main.go`
 
 
 ## API usage
 
-POST /ldaps/users
+### Endpoints
+
+#### POST /ldaps/users
+
+request body:
 
 ```
 {
@@ -28,5 +35,7 @@ POST /ldaps/users
  "email"   : "testgo3@mail.com"
 }
 ```
-you should get response as `password`
+response:
+
+`generated password`
 
