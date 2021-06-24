@@ -11,6 +11,7 @@ func SetupRouter() *gin.Engine {
 	ldap := r.Group("/ldaps")
 	{
 		ldap.POST("users", controllers.CreateNewLDAPUser)
+		ldap.PUT("users/password", controllers.ResetUserLDAPPassword)
 	}
 	return r
 }

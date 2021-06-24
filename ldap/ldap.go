@@ -76,3 +76,52 @@ func CreateLDAPAccount(userId, firstName, lastName, userEmail string) (generated
 	log.Println(fmt.Sprintf("user %s has been created", userId))
 	return userPassword, nil
 }
+
+func ResetPassword(userId, newPassword string) (changedPassword string, ldapErr error) {
+
+	ldapURL := os.Getenv("LDAP_URL")
+	// connect to LDAP
+
+	l, err := ldap.DialURL(ldapURL)
+	if err != nil {
+		log.Fatal(err)
+		return "", err
+	}
+	defer l.Close()
+
+	log.Println("connected")
+
+	// authenticate to LDAP
+	adminDN := os.Getenv("ADMIN_DN")
+	adminPasswd := os.Getenv("ADMIN_PASSWD")
+
+	err = l.Bind(adminDN, adminPasswd)
+	if err != nil {
+		log.Fatal(err)
+		return "", err
+	}
+	log.Println("authenticated")
+
+	// TODO check user exists
+
+	// Reset Password
+	// -h {SSHA} is the default
+	hashedUserPassword, _ := exec.Command("slappasswd", "-s", newPassword).Output()
+
+	log.Printf("changing password is %s", newPassword)
+	log.Printf("hashed changing password is %x", hashedUserPassword)
+
+	userDNFormat := os.Getenv("USER_DN_FORMAT")
+	userDN := fmt.Sprintf(userDNFormat, userId)
+
+	modifyRequest := ldap.NewModifyRequest(userDN, []ldap.Control{})
+	modifyRequest.Replace("userPassword", []string{string(hashedUserPassword)})
+
+	if err := l.Modify(modifyRequest); err != nil {
+		log.Fatal("error adding service:", modifyRequest, err)
+		return "", err
+	}
+
+	log.Println(fmt.Sprintf("user %s password has been modified", userId))
+	return newPassword, nil
+}

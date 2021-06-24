@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//Create LDAP account
 func CreateNewLDAPUser(c *gin.Context) {
 
 	var createRequest models.CreateRequest
@@ -25,6 +24,22 @@ func CreateNewLDAPUser(c *gin.Context) {
 	}
 
 	defer c.JSON(http.StatusOK, generatedPassword)
+}
+
+func ResetUserLDAPPassword(c *gin.Context) {
+
+	var passwordRequest models.PasswordRequest
+	c.BindJSON(&passwordRequest)
+
+	fmt.Printf("Reset LDAP account with detail %s", passwordRequest)
+
+	changedPassword, ldapErr := ldap.ResetPassword(passwordRequest.ID, passwordRequest.NewPassword)
+
+	if ldapErr != nil {
+		c.JSON(http.StatusInternalServerError, ldapErr)
+	}
+
+	defer c.JSON(http.StatusOK, changedPassword)
 }
 
 // func sendEmail() {
