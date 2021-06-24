@@ -6,7 +6,6 @@ It is created using `go-ldap` package and wrapped in `gin-gonic` for providing A
 
 ## Local
 
-
 - `go mod init github.com/insomniacoder/ldap-api`
 - set up environment varialbe in .envrc
 ```
@@ -44,4 +43,3 @@ request body:
 response:
 
 `generated password`
-
